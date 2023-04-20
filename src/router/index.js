@@ -4,10 +4,14 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/home',
-  //   component: () => import('@/views/HomeView.vue'),
-  // },
+  {
+    path: '/',
+    component: () => import('@/views/XzdWeather/index.vue'),
+  },
+  {
+    path: '/weather',
+    component: () => import('@/views/XzdWeather/index.vue'),
+  },
 ]
 
 const router = new VueRouter({

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    这是项目首页
+    一级路由出口
     <router-view />
   </div>
 </template>
