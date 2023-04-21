@@ -7,11 +7,18 @@ const routes = [
   {
     path: '/',
     component: () => import('@/views/XzdWeather/index.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/XzdWeather/TheMain.vue'),
+      },
+      {
+        path: 'weather/result',
+        component: () => import('@/views/XzdWeather/TheResult.vue'),
+      },
+    ],
   },
-  {
-    path: '/weather',
-    component: () => import('@/views/XzdWeather/index.vue'),
-  },
+ 
 ]
 
 const router = new VueRouter({

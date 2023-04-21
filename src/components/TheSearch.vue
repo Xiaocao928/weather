@@ -7,7 +7,7 @@
       v-model="city"
       @input="getCityWeather"
     />
-    <ul class="search-result" v-if="city && showResult">
+    <ul class="search-result" v-if="city && showResult" @click="$router.push('weather/result')">
       <li v-if="loading">查询中，请稍候...</li>
       <li v-else-if="error">查询失败，请输入国内主要省份并精确到城市</li>
       <li v-else-if="result">{{ result }}</li>
@@ -35,7 +35,7 @@ export default {
     },
   },
   methods: {
-    //防抖
+    //
     getCityWeather: debounce(async function () {
       if (!this.city) {
         return
@@ -61,6 +61,9 @@ export default {
         this.loading = false
       }
     }, 500),
+    handleResult() {
+      console.log('点击')
+    },
   },
 }
 </script>
