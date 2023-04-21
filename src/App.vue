@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    一级路由出口
     <router-view />
   </div>
 </template>
@@ -12,4 +11,6 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+@import url('~@/assets/styles/reset.css');
+</style>
