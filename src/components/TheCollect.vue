@@ -11,7 +11,6 @@
         <button>删除</button>
       </div>
     </div>
-    
   </div>
 </template>
 
@@ -38,7 +37,7 @@ export default {
   width: 100%;
   gap: 10px;
   align-items: center;
-  padding: 15px 10px;
+  padding: 15px 0;
 }
 .collect .city-info {
   display: flex;

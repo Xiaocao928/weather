@@ -1,22 +1,44 @@
 <template>
   <div class="more-weather">
-    <h2>未来一周天气</h2>
-    <v-chart :option="option" class="chart"></v-chart>
+    <h2 class="title">未来一周天气</h2>
+    <div class="forecast">
+      <div class="weather-detail">
+        <div class="everyday" v-for="item in weather" :key="item.index">
+          <span>{{ item.date }}</span>
+          <span>{{ item.week }}</span>
+          <span>{{ item.type }}</span>
+          <span>风力{{ item.fengli }}</span>
+        </div>
+      </div>
+      <div class="chart">
+        <v-chart :option="option"> </v-chart>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { getWeatherByWeek } from '@/api/weather'
 export default {
   name: 'TheMore',
+  data() {
+    return {
+      city: '哈尔滨市',
+      weather: [],
+    }
+  },
+  mounted() {
+    this.getData()
+  },
   computed: {
     option() {
       return {
         tooltip: {
           trigger: 'axis',
         },
-        legend: {},
+
         toolbox: {
-          show: true,
+          show: false,
           feature: {
             dataZoom: {
               yAxisIndex: 'none',
@@ -29,60 +51,61 @@ export default {
         },
         xAxis: {
           type: 'category',
+          show: false,
           boundaryGap: false,
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: this.weather.map(item => item.week),
         },
         yAxis: {
           type: 'value',
+          show: false,
           axisLabel: {
             formatter: '{value} °C',
           },
         },
         series: [
           {
-            name: 'Highest',
+            name: '',
             type: 'line',
-            data: [10, 11, 13, 11, 12, 12, 9],
-            markPoint: {
-              data: [
-                { type: 'max', name: 'Max' },
-                { type: 'min', name: 'Min' },
-              ],
-            },
-            markLine: {
-              data: [{ type: 'average', name: 'Avg' }],
+            data: this.weather.map(item => item.high.replace(/°C/, '')), //获取天气的数据源,将原始数据中的°C去掉
+
+            label: {
+              show: true,
+              color: '#fff',
+              fontSize: 12,
+              // 格式化标签内容
+              formatter: function (params) {
+                return '白' + params.value + '℃'
+              },
             },
           },
           {
-            name: 'Lowest',
+            name: '',
             type: 'line',
-            data: [1, -2, 2, 5, 3, 2, 0],
-            markPoint: {
-              data: [{ name: '周最低', value: -2, xAxis: 1, yAxis: -1.5 }],
-            },
-            markLine: {
-              data: [
-                { type: 'average', name: 'Avg' },
-                [
-                  {
-                    symbol: 'none',
-                    x: '90%',
-                    yAxis: 'max',
-                  },
-                  {
-                    symbol: 'circle',
-                    label: {
-                      position: 'start',
-                      formatter: 'Max',
-                    },
-                    type: 'max',
-                    name: '最高点',
-                  },
-                ],
-              ],
+            data: this.weather.map(item => item.low.replace(/°C/, '')),
+            label: {
+              position: 'bottom',
+              show: true,
+              color: '#fff',
+              fontSize: 12,
+              formatter: function (params) {
+                return '晚' + params.value + '℃'
+              },
             },
           },
         ],
+      }
+    },
+  },
+  methods: {
+    async getData() {
+      try {
+        const res = await getWeatherByWeek({ city: this.city, type: 'week' })
+        console.log(res)
+        this.weather = res.data
+        console.log(this.weather)
+        console.log()
+      } catch (err) {
+        this.$message.error('获取一周天气出错')
       }
     },
   },
@@ -92,11 +115,30 @@ export default {
 <style>
 .more-weather {
   width: 70%;
+  height: 400px;
   margin: 5px auto;
   color: #fff;
-  height: 400px;
 }
-.charts {
+.title {
+  margin-top: 24px;
+  margin-bottom: 15px;
+}
+.more-weather .forecast {
+  background-color: #004e71;
+}
+.forecast .weather-detail {
+  display: flex;
+
+  justify-content: space-around;
+}
+.forecast .weather-detail .everyday {
+  display: flex;
+  gap: 25px;
+  margin-top: 20px;
+  flex-direction: column;
+  align-items: center;
+}
+.forecast .chart {
   height: 300px;
 }
 </style>

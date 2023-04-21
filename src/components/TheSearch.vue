@@ -7,7 +7,11 @@
       v-model="city"
       @input="getCityWeather"
     />
-    <ul class="search-result" v-if="city && showResult" @click="$router.push('weather/result')">
+    <ul
+      class="search-result"
+      v-if="city && showResult"
+      @click="$router.push('weather/result')"
+    >
       <li v-if="loading">查询中，请稍候...</li>
       <li v-else-if="error">查询失败，请输入国内主要省份并精确到城市</li>
       <li v-else-if="result">{{ result }}</li>
@@ -43,7 +47,7 @@ export default {
 
       this.loading = true
       try {
-        const res = await getWeatherByCity({ city: this.city })
+        const res = await getWeatherByCity({ city: this.city, type: 'week' })
         console.log(res)
         console.log(res.success)
         if (res.success == true) {
@@ -61,9 +65,6 @@ export default {
         this.loading = false
       }
     }, 500),
-    handleResult() {
-      console.log('点击')
-    },
   },
 }
 </script>
@@ -79,8 +80,8 @@ export default {
   outline: none;
   border-bottom: 1px solid #fff;
   width: 100%;
-  margin: 10px 10px;
-  padding: 10px;
+  margin-block: 10px;
+  padding-block: 10px;
   font-size: 16px;
   color: #fff;
   background-color: transparent;
