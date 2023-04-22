@@ -26,7 +26,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .collect-list {
   width: 70%;
   margin: 0 auto;
@@ -38,6 +38,7 @@ export default {
   gap: 10px;
   align-items: center;
   padding: 15px 0;
+  cursor: pointer;
 }
 .collect .city-info {
   display: flex;
@@ -46,11 +47,15 @@ export default {
   background-color: #004e71;
   padding: 15px 10px;
 }
+
 .collect .control {
-  /* display: none; */
-  display: flex;
+  display: none;
   justify-content: space-between;
   flex: 1;
+  transition: all 0.5s ease-in-out;
+}
+.collect:hover .control {
+  display: flex;
 }
 .collect .control button {
   background-color: #eab308;
@@ -58,6 +63,7 @@ export default {
   font-size: 16px;
   padding: 11px 22px;
   border: none;
+  cursor: pointer;
 }
 .tip {
   text-align: center;
