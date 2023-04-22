@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { getWeather } from '@/api/weather'
+import { getWeather, getWeatherByWeek } from '@/api/weather'
 export default {
   name: 'TheHeader',
   data() {
@@ -64,6 +64,7 @@ export default {
   },
   mounted() {
     this.getRealTimeWeather()
+    this.getForcast()
   },
   methods: {
     async getRealTimeWeather() {
@@ -79,9 +80,19 @@ export default {
         this.$message.error(err || '加载出错了')
       }
     },
-    getForcast(){
 
-    }
+    async getForcast() {
+      try {
+        const res = await getWeatherByWeek({
+          city: this.weather.city,
+          type: 'week',
+        })
+        console.log(res)
+        this.$store.dispatch('localWeather/getForecastData', this.weather.city)
+      } catch (err) {
+        this.$message.error(err || '加载出错了')
+      }
+    },
   },
 }
 </script>

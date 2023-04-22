@@ -10,6 +10,7 @@
           <span>风力{{ item.fengli }}</span>
         </div>
       </div>
+
       <div class="chart">
         <v-chart :option="option"> </v-chart>
       </div>
@@ -18,20 +19,24 @@
 </template>
 
 <script>
-import { getWeatherByWeek } from '@/api/weather'
+import { mapState } from 'vuex'
 export default {
   name: 'TheMore',
   data() {
-    return {
-      city: '哈尔滨市',
-      weather: [],
-    }
+    return {}
   },
-  mounted() {
-    this.getData()
-  },
+
   computed: {
+    ...mapState('localWeather', {
+      forecast: state => state.forecast.data,
+    }),
+    weather() {
+      return this.forecast
+    },
     option() {
+      if (!this.weather) {
+        return {}
+      }
       return {
         tooltip: {
           trigger: 'axis',
@@ -93,19 +98,6 @@ export default {
             },
           },
         ],
-      }
-    },
-  },
-  methods: {
-    async getData() {
-      try {
-        const res = await getWeatherByWeek({ city: this.city, type: 'week' })
-        console.log(res)
-        this.weather = res.data
-        console.log(this.weather)
-        console.log()
-      } catch (err) {
-        this.$message.error('获取一周天气出错')
       }
     },
   },
