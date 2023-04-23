@@ -3,7 +3,7 @@
     <h2 class="title">未来一周天气</h2>
     <div class="forecast">
       <div class="weather-detail">
-        <div class="everyday" v-for="item in weather" :key="item.index">
+        <div class="everyday" v-for="item in weatherData" :key="item.index">
           <span>{{ item.date }}</span>
           <span>{{ item.week }}</span>
           <span>{{ item.type }}</span>
@@ -19,22 +19,21 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'TheMore',
+  props: {
+    weatherData: {
+      type: Array,
+      required: false,
+    },
+  },
   data() {
     return {}
   },
 
   computed: {
-    ...mapState('localWeather', {
-      forecast: state => state.forecast.data,
-    }),
-    weather() {
-      return this.forecast
-    },
     option() {
-      if (!this.weather) {
+      if (!this.weatherData) {
         return {}
       }
       return {
@@ -58,7 +57,7 @@ export default {
           type: 'category',
           show: false,
           boundaryGap: false,
-          data: this.weather.map(item => item.week),
+          data: this.weatherData.map(item => item.week),
         },
         yAxis: {
           type: 'value',
@@ -71,7 +70,7 @@ export default {
           {
             name: '',
             type: 'line',
-            data: this.weather.map(item => item.high.replace(/°C/, '')), //获取天气的数据源,将原始数据中的°C去掉
+            data: this.weatherData.map(item => item.high.replace(/°C/, '')), //获取天气的数据源,将原始数据中的°C去掉
 
             label: {
               show: true,
@@ -86,7 +85,7 @@ export default {
           {
             name: '',
             type: 'line',
-            data: this.weather.map(item => item.low.replace(/°C/, '')),
+            data: this.weatherData.map(item => item.low.replace(/°C/, '')),
             label: {
               position: 'bottom',
               show: true,

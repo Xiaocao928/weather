@@ -18,6 +18,7 @@
       </div>
       <div class="about">
         <i class="iconfont icon-about" @click="visibility = !visibility"></i>
+        <i class="iconfont icon-jiahao" @click="handleAdd"></i>
       </div>
     </div>
     <div class="wrapper" v-show="visibility">
@@ -48,6 +49,8 @@
 
 <script>
 import { getWeather, getWeatherByWeek } from '@/api/weather'
+import { mapState } from 'vuex'
+import { Message } from 'element-ui'
 export default {
   name: 'TheHeader',
   data() {
@@ -59,8 +62,15 @@ export default {
         type: '',
         temperature: '',
       },
+      high: '',
+      cityList: [],
       visibility: false,
     }
+  },
+  computed: {
+    ...mapState({
+      searchName: state => state.local.searchName,
+    }),
   },
   mounted() {
     this.getRealTimeWeather()
@@ -87,18 +97,46 @@ export default {
           city: this.weather.city,
           type: 'week',
         })
-        console.log(res)
-        this.$store.dispatch('localWeather/getForecastData', this.weather.city)
+        //console.log(res)
+        this.$store.commit('local/getCityname', this.weather.city)
       } catch (err) {
         this.$message.error(err || '加载出错了')
       }
+    },
+    async handleAdd() {
+      try {
+        const res = await getWeatherByWeek({
+          city: this.searchName,
+          type: 'week',
+        })
+        this.high = res.data[0].high
+      } catch (err) {
+        this.Message.error(err || '加载出错了')
+      }
+      //判断是否重复添加
+      const isExist = this.cityList.some(city => city.name === this.searchName)
+      //console.log(isExist)
+      if (isExist) {
+        Message.error('该城市已存在')
+        return
+      }
+      const max = Math.max(...this.cityList.map(item => item.id))
+      //console.log(max)
+      this.cityList.push({
+        id: max < 0 ? 1 : max + 1,
+        name: this.searchName,
+        high: this.high,
+      })
+
+      // 保存数据
+      localStorage.setItem('cityList', JSON.stringify(this.cityList))
     },
   },
 }
 </script>
 
 <style>
-@import url('http://at.alicdn.com/t/c/font_4027375_ko2enp905ro.css');
+@import url('http://at.alicdn.com/t/c/font_4027375_0mhxnh971jsg.css');
 .container {
   height: 80px;
   display: flex;

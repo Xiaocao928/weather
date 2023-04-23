@@ -1,14 +1,14 @@
 <template>
   <!-- 收藏的城市列表 -->
   <div class="collect-list">
-    <div class="collect">
+    <div class="collect" v-for="(city, index) in cityList" :key="city.id">
       <div class="city-info">
         <h3>{{ city.name }}</h3>
         <span>{{ city.high }}</span>
       </div>
       <div class="control">
-        <button>查看</button>
-        <button>删除</button>
+        <button @click="viewCity(index)">查看</button>
+        <button @click="deleteCity(index)">删除</button>
       </div>
     </div>
   </div>
@@ -17,10 +17,33 @@
 <script>
 export default {
   name: 'TheCollect',
-  props: {
-    city: {
-      type: Object,
-      required: true,
+  data() {
+    return {
+      cityList: [],
+    }
+  },
+
+  mounted() {
+    this.getCityList()
+  },
+  methods: {
+    getCityList() {
+      let res = localStorage.getItem('cityList')
+
+      if (!res) {
+        localStorage.setItem('cityList', JSON.stringify([]))
+      } else {
+        this.cityList = JSON.parse(res)
+      }
+    },
+    viewCity(index) {
+      this.$store.commit('local/searchName', this.cityList[index].name)
+      this.$router.push('weather/result')
+    },
+    deleteCity(index) {
+      console.log(index)
+      this.cityList.splice(index, 1)
+      localStorage.setItem('cityList', JSON.stringify(this.cityList))
     },
   },
 }

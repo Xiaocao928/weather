@@ -4,12 +4,12 @@
       class="city"
       type="text"
       placeholder="请输入城市名"
-      v-model="city"
+      v-model="cityName"
       @input="getCityWeather"
     />
     <ul
       class="search-result"
-      v-if="city && showResult"
+      v-if="cityName && showResult"
       @click="$router.push('weather/result')"
     >
       <li v-if="loading">查询中，请稍候...</li>
@@ -27,7 +27,7 @@ export default {
   name: 'TheSearch',
   data() {
     return {
-      city: '',
+      cityName: '',
       result: '',
       loading: false,
       error: false,
@@ -41,17 +41,22 @@ export default {
   methods: {
     //
     getCityWeather: debounce(async function () {
-      if (!this.city) {
+      if (!this.cityName) {
         return
       }
 
       this.loading = true
       try {
-        const res = await getWeatherByCity({ city: this.city, type: 'week' })
-        console.log(res)
-        console.log(res.success)
+        const res = await getWeatherByCity({
+          city: this.cityName,
+          type: 'week',
+        })
+        //console.log(res)
+        //console.log(res.success)
         if (res.success == true) {
           this.result = res.city
+          //console.log(this.result)
+          this.$store.commit('local/searchName', this.result)
           this.error = false
         } else {
           console.log('返回结果状态是false')
@@ -97,7 +102,7 @@ export default {
   width: 100%;
   background-color: #004e71;
 
-  padding: 15px 10px;
+  padding: 15px 0px;
 }
 .search .search-result p {
   display: none;
