@@ -1,6 +1,8 @@
+// 设置了一个单独的模块
 const state = {
   localCity: '', // 本地城市名字
-  searchName: '',
+  searchName: '',//搜索的城市名字
+  cityList:[],//保存的城市列表
 }
 
 const mutations = {
@@ -11,10 +13,13 @@ const mutations = {
     state.searchName = searchResult
     //console.log(state.searchName)
   },
+  saveCityList(state,cityList){
+    state.cityList = cityList
+  }
 }
 
 export default {
-  namespaced: true,
+  namespaced: true,//开启命名空间
   state,
   mutations,
 }

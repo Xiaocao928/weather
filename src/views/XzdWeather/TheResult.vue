@@ -50,7 +50,7 @@ export default {
         this.weatherData = res.data
         //console.log(this.weatherData[0])
       } catch (err) {
-        this.$message.error(err || '加载出错了')
+        Message.error(err || '加载出错了')
       }
     },
   },

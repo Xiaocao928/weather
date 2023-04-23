@@ -18,33 +18,23 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'TheCollect',
-  data() {
-    return {
-      cityList: [],
-    }
-  },
-
-  mounted() {
-    this.getCityList()
+  computed: {
+    ...mapState({
+      cityList: state => state.local.cityList,
+    }),
   },
   methods: {
-    getCityList() {
-      let res = localStorage.getItem('cityList')
-
-      if (!res) {
-        localStorage.setItem('cityList', JSON.stringify([]))
-      } else {
-        this.cityList = JSON.parse(res)
-      }
-    },
+    //查看收藏列表里城市的天气
     viewCity(index) {
       this.$store.commit('local/searchName', this.cityList[index].name)
       this.$router.push('weather/result')
     },
+    // 删除收藏列表里的城市
     deleteCity(index) {
-      console.log(index)
+      //console.log(index)
       this.cityList.splice(index, 1)
       localStorage.setItem('cityList', JSON.stringify(this.cityList))
     },
@@ -55,17 +45,24 @@ export default {
 <style scoped>
 .collect-list {
   width: 70%;
+  max-height: 200px;
   margin: 0 auto;
   color: #fff;
+  overflow: auto;
+  white-space: nowrap;
+  overflow-y: scroll;
+}
+/* 去掉滑动条 */
+.collect-list::-webkit-scrollbar {
+  display: none; /* Chrome Safari */
 }
 .collect {
   display: flex;
   width: 100%;
   gap: 10px;
   align-items: center;
-  padding: 15px 0;
+  padding: 8px 0;
   cursor: pointer;
-  
 }
 .collect .city-info {
   display: flex;

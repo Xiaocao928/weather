@@ -6,6 +6,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-    local,
+    local,//挂载local模块
   },
 })

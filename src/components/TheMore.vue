@@ -1,7 +1,9 @@
 <template>
+  <!-- 未来一周天气,用Echarts -->
   <div class="more-weather">
     <h2 class="title">未来一周天气</h2>
     <div class="forecast">
+      <!-- 今日天气 -->
       <div class="weather-detail">
         <div class="everyday" v-for="item in weatherData" :key="item.index">
           <span>{{ item.date }}</span>
@@ -19,12 +21,13 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 export default {
   name: 'TheMore',
   props: {
     weatherData: {
       type: Array,
-      required: false,
+      required: true,
     },
   },
   data() {
@@ -33,16 +36,17 @@ export default {
 
   computed: {
     option() {
+      // 如果数据数控的就不渲染了
       if (!this.weatherData) {
+        Message.error('获取天气数据出错')
         return {}
       }
       return {
         tooltip: {
           trigger: 'axis',
         },
-
         toolbox: {
-          show: false,
+          show: false, //工具栏隐藏
           feature: {
             dataZoom: {
               yAxisIndex: 'none',
@@ -57,7 +61,7 @@ export default {
           type: 'category',
           show: false,
           boundaryGap: false,
-          data: this.weatherData.map(item => item.week),
+          data: this.weatherData.map(item => item.week), //横坐标为接下来一周的天气
         },
         yAxis: {
           type: 'value',
@@ -87,7 +91,7 @@ export default {
             type: 'line',
             data: this.weatherData.map(item => item.low.replace(/°C/, '')),
             label: {
-              position: 'bottom',
+              position: 'bottom',//在折线下边显示
               show: true,
               color: '#fff',
               fontSize: 12,

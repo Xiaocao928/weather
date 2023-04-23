@@ -39,7 +39,7 @@ export default {
     },
   },
   methods: {
-    //
+    //获取指定城市的天气,设置了防抖,时间为300毫秒
     getCityWeather: debounce(async function () {
       if (!this.cityName) {
         return
@@ -56,10 +56,11 @@ export default {
         if (res.success == true) {
           this.result = res.city
           //console.log(this.result)
+          //写到vuex中
           this.$store.commit('local/searchName', this.result)
           this.error = false
         } else {
-          console.log('返回结果状态是false')
+          //console.log('返回结果状态是false')
           this.error = true
           this.result = ''
         }
@@ -69,7 +70,7 @@ export default {
       } finally {
         this.loading = false
       }
-    }, 500),
+    }, 300),
   },
 }
 </script>

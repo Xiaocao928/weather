@@ -14,6 +14,7 @@ import TheMore from '@/components/TheMore.vue'
 import TheCollect from '@/components/TheCollect.vue'
 import { getWeatherByWeek } from '@/api/weather'
 import { mapState } from 'vuex'
+import { Message } from 'element-ui'
 
 export default {
   name: 'TheMain',
@@ -46,7 +47,7 @@ export default {
         //console.log(this.localCity)
         this.weatherData = res.data
       } catch (err) {
-        this.$message.error(err || '加载出错了')
+        Message.error(err || '加载出错了')
       }
     },
   },

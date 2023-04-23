@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 头部 -->
     <header>
       <div class="container">
         <div class="nav">
@@ -41,8 +42,12 @@
               <span>1.点击搜索框输入你希望追踪的城市</span> <br />
               <span>2.在搜索结果中选中一个城市，你将获取当地最新的天气</span>
               <br />
+              <span
+                >3.搜索城市名时尽量准确（搜索长沙会显示长治市，搜索长沙市就会显示长沙市，这种情况较少）</span
+              >
+              <br />
               <span class="item"
-                >3.点击右侧的＋号可以将追踪城市的天气情况保存在首页</span
+                >4.点击右侧的＋号可以将追踪城市的天气情况保存在首页</span
               >
               <h3>移除城市:</h3>
               <span class="item"
@@ -56,6 +61,7 @@
         </div>
       </div>
     </header>
+    <!-- 页面主体部分 -->
     <main>
       <!-- 二级路由出口 -->
       <router-view></router-view>
@@ -96,18 +102,20 @@ export default {
     this.getRealTimeWeather()
     this.getForcast()
     this.getCityList()
-    this.luyou()
+    this.routeChange()
   },
   watch: {
+    // 监听路由的变化
     $route: {
       handler: function (to, from) {
-        this.luyou()
+        this.routeChange()
       },
       immediate: true, // 立即执行
     },
   },
   methods: {
-    luyou() {
+    // 路由改变，加号的隐藏与显示
+    routeChange() {
       if (this.$route.fullPath === '/weather/result') {
         this.showAddIcon = true // 当路由为 /weather/result 时，显示加号图标
         // console.log('结果')
@@ -117,6 +125,7 @@ export default {
         // console.log(this.showAddIcon)
       }
     },
+    // 获取实时天气
     async getRealTimeWeather() {
       try {
         const res = await getWeather()
@@ -130,19 +139,21 @@ export default {
         Message.error(err || '加载出错了')
       }
     },
-
+    // 获取未来一周的天气
     async getForcast() {
       try {
         const res = await getWeatherByWeek({
-          city: this.weather.city,
+          city: this.weather.city, //参数
           type: 'week',
         })
         //console.log(res)
+        //存储到vuex中
         this.$store.commit('local/getCityname', this.weather.city)
       } catch (err) {
-        Mmessage.error(err || '加载出错了')
+        Message.error(err || '获取数据出错了')
       }
     },
+    // 获取收藏的城市列表
     getCityList() {
       let res = localStorage.getItem('cityList')
 
@@ -151,8 +162,11 @@ export default {
         localStorage.setItem('cityList', JSON.stringify([]))
       } else {
         this.cityList = JSON.parse(res)
+        //写到vuex中
+        this.$store.commit('local/saveCityList', this.cityList)
       }
     },
+    // 添加收藏城市
     async handleAdd() {
       try {
         const res = await getWeatherByWeek({
@@ -161,7 +175,7 @@ export default {
         })
         this.high = res.data[0].high
       } catch (err) {
-        Message.error(err || '加载出错了')
+        Message.error(err || '获取数据出错了')
       }
       //判断是否重复添加
       const isExist = this.cityList.some(city => city.name === this.searchName)
@@ -170,6 +184,7 @@ export default {
         Message.error('该城市已存在')
         return
       }
+
       const max = Math.max(...this.cityList.map(item => item.id))
       //console.log(max)
       this.cityList.push({
@@ -180,6 +195,9 @@ export default {
 
       // 保存数据
       localStorage.setItem('cityList', JSON.stringify(this.cityList))
+
+      //写到vuex中
+      this.$store.commit('local/saveCityList', this.cityList)
     },
   },
 }
@@ -240,7 +258,6 @@ body {
   display: flex;
   flex: 3;
   justify-content: flex-end;
-
 }
 .about i:hover {
   color: #004e71;
