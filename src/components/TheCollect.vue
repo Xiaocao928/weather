@@ -65,6 +65,7 @@ export default {
   align-items: center;
   padding: 15px 0;
   cursor: pointer;
+  
 }
 .collect .city-info {
   display: flex;
@@ -78,7 +79,8 @@ export default {
   display: none;
   justify-content: space-between;
   flex: 1;
-  transition: all 0.5s ease-in-out;
+
+  /* 为啥过渡没生效呢 */
 }
 .collect:hover .control {
   display: flex;

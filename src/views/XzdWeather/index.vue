@@ -23,7 +23,11 @@
               class="iconfont icon-about"
               @click="visibility = !visibility"
             ></i>
-            <i class="iconfont icon-jiahao" @click="handleAdd"></i>
+            <i
+              class="iconfont icon-jiahao"
+              v-if="showAddIcon"
+              @click="handleAdd"
+            ></i>
           </div>
         </div>
         <div class="wrapper" v-show="visibility">
@@ -51,7 +55,6 @@
           </div>
         </div>
       </div>
-
     </header>
     <main>
       <!-- 二级路由出口 -->
@@ -80,6 +83,7 @@ export default {
       high: '',
       cityList: [],
       visibility: false,
+      showAddIcon: true,
     }
   },
   computed: {
@@ -87,12 +91,32 @@ export default {
       searchName: state => state.local.searchName,
     }),
   },
+
   mounted() {
     this.getRealTimeWeather()
     this.getForcast()
-     this.getCityList()
+    this.getCityList()
+    this.luyou()
+  },
+  watch: {
+    $route: {
+      handler: function (to, from) {
+        this.luyou()
+      },
+      immediate: true, // 立即执行
+    },
   },
   methods: {
+    luyou() {
+      if (this.$route.fullPath === '/weather/result') {
+        this.showAddIcon = true // 当路由为 /weather/result 时，显示加号图标
+        // console.log('结果')
+      } else {
+        this.showAddIcon = false // 其他路由时，隐藏加号图标
+        // console.log('首页')
+        // console.log(this.showAddIcon)
+      }
+    },
     async getRealTimeWeather() {
       try {
         const res = await getWeather()
@@ -103,7 +127,7 @@ export default {
         this.weather.type = res.info.type
         this.weather.temperature = res.info.high
       } catch (err) {
-        this.$message.error(err || '加载出错了')
+        Message.error(err || '加载出错了')
       }
     },
 
@@ -116,7 +140,7 @@ export default {
         //console.log(res)
         this.$store.commit('local/getCityname', this.weather.city)
       } catch (err) {
-        this.$message.error(err || '加载出错了')
+        Mmessage.error(err || '加载出错了')
       }
     },
     getCityList() {
@@ -137,7 +161,7 @@ export default {
         })
         this.high = res.data[0].high
       } catch (err) {
-        this.Message.error(err || '加载出错了')
+        Message.error(err || '加载出错了')
       }
       //判断是否重复添加
       const isExist = this.cityList.some(city => city.name === this.searchName)
@@ -216,6 +240,11 @@ body {
   display: flex;
   flex: 3;
   justify-content: flex-end;
+
+}
+.about i:hover {
+  color: #004e71;
+  transition: color 0.3s ease-in-out;
 }
 .iconfont {
   cursor: pointer;
