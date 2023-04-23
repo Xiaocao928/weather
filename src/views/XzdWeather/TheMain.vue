@@ -1,13 +1,8 @@
 <template>
   <div id="app">
     <the-search></the-search>
-
-    <div class="city-list" v-if="cityList.length">
-      <the-collect></the-collect>
-    </div>
-    <div class="tip" v-else>
-      <h2>暂时没有保存过城市天气信息，请查询后点击右上角"+"号保存。</h2>
-    </div>
+    <the-collect></the-collect>
+   
 
     <the-more :weatherData="weatherData"></the-more>
   </div>
@@ -29,7 +24,6 @@ export default {
   },
   data() {
     return {
-      cityList: [],
       weatherData: [],
     }
   },
@@ -40,7 +34,6 @@ export default {
   },
   mounted() {
     this.getForcast()
-    this.getCityList()
   },
   methods: {
     async getForcast() {
@@ -56,17 +49,6 @@ export default {
         this.$message.error(err || '加载出错了')
       }
     },
-
-    getCityList() {
-      let res = localStorage.getItem('cityList')
-
-      if (!res) {
-        // 第一次读取, cityList中是没有数据的
-        localStorage.setItem('cityList', JSON.stringify([]))
-      } else {
-        this.cityList = JSON.parse(res)
-      }
-    },
   },
 }
 </script>
@@ -78,10 +60,5 @@ body {
 #app {
   height: 100vh;
 }
-.tip {
-  width: 70%;
-  text-align: center;
-  margin: 15px auto;
-  color: #fff;
-}
+
 </style>

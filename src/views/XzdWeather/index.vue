@@ -51,7 +51,7 @@
           </div>
         </div>
       </div>
-      <the-header></the-header>
+
     </header>
     <main>
       <!-- 二级路由出口 -->
@@ -61,16 +61,13 @@
 </template>
 
 <script>
-// import TheHeader from '@/components/TheHeader.vue'
 import { getWeather, getWeatherByWeek } from '@/api/weather'
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
   name: 'XzdWeather',
-  components: {
-    // TheHeader,
-  },
+  components: {},
   data() {
     return {
       weather: {
@@ -93,6 +90,7 @@ export default {
   mounted() {
     this.getRealTimeWeather()
     this.getForcast()
+     this.getCityList()
   },
   methods: {
     async getRealTimeWeather() {
@@ -119,6 +117,16 @@ export default {
         this.$store.commit('local/getCityname', this.weather.city)
       } catch (err) {
         this.$message.error(err || '加载出错了')
+      }
+    },
+    getCityList() {
+      let res = localStorage.getItem('cityList')
+
+      if (!res) {
+        // 第一次读取, cityList中是没有数据的
+        localStorage.setItem('cityList', JSON.stringify([]))
+      } else {
+        this.cityList = JSON.parse(res)
       }
     },
     async handleAdd() {

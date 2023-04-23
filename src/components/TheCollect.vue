@@ -1,6 +1,6 @@
 <template>
   <!-- 收藏的城市列表 -->
-  <div class="collect-list">
+  <div class="collect-list" v-if="cityList.length">
     <div class="collect" v-for="(city, index) in cityList" :key="city.id">
       <div class="city-info">
         <h3>{{ city.name }}</h3>
@@ -11,6 +11,9 @@
         <button @click="deleteCity(index)">删除</button>
       </div>
     </div>
+  </div>
+  <div class="tip" v-else>
+    <h2>暂时没有保存过城市天气信息，请查询后点击右上角"+"号保存。</h2>
   </div>
 </template>
 
