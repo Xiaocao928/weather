@@ -7,7 +7,7 @@
           <router-link to="/">
             <div class="logo">
               <i class="iconfont icon-sun"></i>
-              <p>心情天气</p>
+              <p>心晴天气</p>
             </div>
           </router-link>
           <div class="weather-live">
