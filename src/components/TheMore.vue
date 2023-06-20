@@ -36,7 +36,7 @@ export default {
 
   computed: {
     option() {
-      // 如果数据数控的就不渲染了
+      // 如果数据数空的就不渲染了
       if (!this.weatherData) {
         Message.error('获取天气数据出错')
         return {}
@@ -91,7 +91,7 @@ export default {
             type: 'line',
             data: this.weatherData.map(item => item.low.replace(/°C/, '')),
             label: {
-              position: 'bottom',//在折线下边显示
+              position: 'bottom', //在折线下边显示
               show: true,
               color: '#fff',
               fontSize: 12,
@@ -134,6 +134,7 @@ export default {
   align-items: center;
 }
 .forecast .chart {
+  width: 100%;
   height: 300px;
 }
 </style>

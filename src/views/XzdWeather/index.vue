@@ -7,7 +7,7 @@
           <router-link to="/">
             <div class="logo">
               <i class="iconfont icon-sun"></i>
-              <p>新中地天气</p>
+              <p>心情天气</p>
             </div>
           </router-link>
           <div class="weather-live">
@@ -217,6 +217,8 @@ body {
   color: #fff;
 }
 .container {
+  position: relative;
+  width: 100%;
   height: 80px;
   display: flex;
   align-items: center;
